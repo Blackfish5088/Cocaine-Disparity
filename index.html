@@ -51,27 +51,27 @@
   </section>
 
   <!-- Likelihood Prediction Section -->
-  <section id="likelihood">
-    <h2>Predict Likelihood of Sentencing Outcome</h2>
-    <form id="likelihoodForm">
-      <label for="drugType">Drug Type:</label>
-      <select id="drugType">
-        <option value="Crack">Crack</option>
-        <option value="Powder Cocaine">Powder Cocaine</option>
-      </select>
+ <section id="likelihood">
+  <h2>Predict Likelihood of Sentencing Outcome</h2>
+  <form id="likelihoodForm">
+    <label for="drugType">Drug Type:</label>
+    <select id="drugType">
+      <option value="Crack">Crack</option>
+      <option value="Powder Cocaine">Powder Cocaine</option>
+    </select>
 
-      <label for="race">Race:</label>
-      <select id="race">
-        <option value="White">White</option>
-        <option value="Black">Black</option>
-        <option value="Hispanic">Hispanic</option>
-      </select>
+    <label for="race">Race:</label>
+    <select id="race">
+      <option value="White">White</option>
+      <option value="Black">Black</option>
+      <option value="Hispanic">Hispanic</option>
+    </select>
 
-      <button type="button" onclick="predictLikelihood()">Predict Likelihood</button>
-    </form>
+    <button type="button" onclick="predictLikelihood()">Predict Likelihood</button>
+  </form>
 
-    <p>Likelihood of Sentence Length > 36 months: <span id="likelihoodOutput"></span>%</p>
-  </section>
+  <p>Likelihood of Sentence Length > 36 months: <span id="likelihoodOutput"></span></p>
+</section>
 
   <footer>
     <p>Created by Jack Crone | 2024</p>
