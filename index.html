@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Racial Disparities in Sentencing</title>
   <link rel="stylesheet" href="styles.css">
-    <!-- Include PapaParse for reading CSV data -->
+  
+  <!-- Include PapaParse for reading CSV data -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  
   <!-- Chart.js library for interactive charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -32,11 +33,19 @@
   
   <section id="data-analysis">
     <h2>Data Analysis</h2>
-<!-- START of Canvas Element for Crack Cocaine Pie Chart -->
-  <h3>Percentage of Crack Cocaine Incarcerations by Race</h3>
-<!-- This canvas element is where the pie chart will be rendered -->
-  <canvas id="crackCocaineChart" width="400" height="400"></canvas>
-<!-- END of Canvas Element for Crack Cocaine Pie Chart -->
+    
+    <!-- START of Canvas Element for Crack Cocaine Pie Chart -->
+    <h3>Percentage of Crack Cocaine Incarcerations by Race</h3>
+    <!-- This canvas element is where the pie chart will be rendered -->
+    <canvas id="crackCocaineChart" width="400" height="400"></canvas>
+    <!-- END of Canvas Element for Crack Cocaine Pie Chart -->
+
+    <!-- START of Canvas Element for Incarceration Bar Chart -->
+    <h3>Incarceration Counts by Race and Drug Type</h3>
+    <!-- This canvas element is where the bar chart will be rendered -->
+    <canvas id="incarcerationChart" width="600" height="400"></canvas>
+    <!-- END of Canvas Element for Incarceration Bar Chart -->
+  </section>
 
   <section id="methodology">
     <h2>Methodology</h2>
@@ -52,8 +61,7 @@
     <p>Created by [Your Name] | 2024</p>
   </footer>
   
-  <!-- Include Chart.js for data visualization -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Link to your custom JavaScript file where the chart code is located -->
   <script src="scripts.js"></script>
 </body>
 </html>
