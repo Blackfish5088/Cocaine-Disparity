@@ -72,7 +72,7 @@ function predictLikelihood() {
 
   // Filter data based on selected drug type and race
   const filteredData = data.filter(row => {
-    return row['DrugType'] === drugType && row['Race'] === race;
+    return row['Drug_Type'] === drugType && row['Race'] === race;
   });
 
   const totalCases = filteredData.length;
@@ -84,7 +84,7 @@ function predictLikelihood() {
 
   // Calculate the number of sentences over 36 months
   const longSentences = filteredData.filter(row => {
-    return parseFloat(row['SentenceLength']) > 36;
+    return parseFloat(row['Average_Sentence_Length_Months']) > 36;
   }).length;
 
   // Calculate the likelihood percentage
