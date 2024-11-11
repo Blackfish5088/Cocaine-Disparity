@@ -1,7 +1,7 @@
 // Ensure scripts run after DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   // Load the CSV data using PapaParse
-  Papa.parse('data/DF.csv', { // Update to correct path if the file is in a folder
+  Papa.parse('DF.csv', { // Update the path if DF.csv is in a different folder
     download: true,
     header: true,
     dynamicTyping: true, // Converts numeric strings to numbers
@@ -9,8 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (results && results.data) {
         window.globalData = results.data;
         console.log("Data successfully loaded");
-        // Create visualizations after data is loaded
-        createVisualizations(window.globalData);
+        // No need to call createVisualizations since we're not using graphs
       } else {
         console.error("Data loading failed. Please check the CSV file path and content.");
       }
@@ -20,37 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
-
-// Function to create visualizations using Plotly.js
-function createVisualizations(data) {
-  // Aggregate data by race
-  const raceCounts = {};
-
-  data.forEach(row => {
-    const race = row['Race'];
-    if (race) {
-      raceCounts[race] = (raceCounts[race] || 0) + 1;
-    }
-  });
-
-  const races = Object.keys(raceCounts);
-  const counts = Object.values(raceCounts);
-
-  const trace = {
-    x: races,
-    y: counts,
-    type: 'bar',
-    marker: { color: 'rgb(142,124,195)' }
-  };
-
-  const layout = {
-    title: 'Number of Sentences by Race',
-    xaxis: { title: 'Race' },
-    yaxis: { title: 'Number of Sentences' }
-  };
-
-  Plotly.newPlot('race-sentences-chart', [trace], layout);
-}
 
 // Function to predict likelihood based on user input
 function predictLikelihood() {
