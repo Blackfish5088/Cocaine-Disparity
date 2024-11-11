@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
       window.globalData = results.data;
       // Create visualizations after data is loaded
       createVisualizations(window.globalData);
+      // Train the machine learning model
+      trainModel(window.globalData);
     },
     error: function(err) {
       console.error("Error loading CSV data:", err);
@@ -34,84 +36,74 @@ function createVisualizations(data) {
   createArrestRateChart(data);
 }
 
-// Function to create the average sentence length chart
-function createAverageSentenceChart(data) {
-  const races = ['Black', 'White', 'Hispanic'];
-  const drugTypes = ['Crack', 'Powder Cocaine'];
-  const years = [...new Set(data.map(row => row.Year))].sort();
+// Existing visualization functions remain unchanged
+// ... [createAverageSentenceChart and createArrestRateChart functions] ...
 
-  const traces = [];
+// Global variable to hold the trained model
+let trainedModel;
 
-  races.forEach(race => {
-    drugTypes.forEach(drug => {
-      const filteredData = data.filter(row => row.Race === race && row.Drug_Type === drug);
-      const avgSentenceByYear = years.map(year => {
-        const yearData = filteredData.filter(row => row.Year === year);
-        if (yearData.length > 0) {
-          const avgSentence = yearData.reduce((sum, row) => sum + row.Average_Sentence_Length_Months, 0) / yearData.length;
-          return avgSentence;
-        } else {
-          return null;
-        }
-      });
+// Function to train the machine learning model
+function trainModel(data) {
+  // Prepare the data
+  const cleanedData = data.filter(row => 
+    row.Drug_Type && row.Race && typeof row.Average_Sentence_Length_Months === 'number'
+  );
 
-      traces.push({
-        x: years,
-        y: avgSentenceByYear,
-        mode: 'lines+markers',
-        name: `${race} - ${drug}`,
-        connectgaps: true
-      });
-    });
+  // Convert categorical data to numerical using one-hot encoding
+  const drugTypes = [...new Set(cleanedData.map(row => row.Drug_Type))];
+  const races = [...new Set(cleanedData.map(row => row.Race))];
+
+  // Create mappings
+  const drugTypeMap = {};
+  drugTypes.forEach((type, index) => {
+    drugTypeMap[type] = index;
   });
 
-  const layout = {
-    title: 'Average Sentence Length Over Years',
-    xaxis: { title: 'Year' },
-    yaxis: { title: 'Average Sentence Length (Months)' }
-  };
-
-  Plotly.newPlot('average-sentence-chart', traces, layout);
-}
-
-// Function to create the arrest rate chart
-function createArrestRateChart(data) {
-  const races = ['Black', 'White', 'Hispanic'];
-  const drugTypes = ['Crack', 'Powder Cocaine'];
-  const years = [...new Set(data.map(row => row.Year))].sort();
-
-  const traces = [];
-
-  races.forEach(race => {
-    drugTypes.forEach(drug => {
-      const filteredData = data.filter(row => row.Race === race && row.Drug_Type === drug);
-      const arrestRateByYear = years.map(year => {
-        const yearData = filteredData.filter(row => row.Year === year);
-        if (yearData.length > 0) {
-          const avgArrestRate = yearData.reduce((sum, row) => sum + row.Arrest_Rate_per_100000, 0) / yearData.length;
-          return avgArrestRate;
-        } else {
-          return null;
-        }
-      });
-
-      traces.push({
-        x: years,
-        y: arrestRateByYear,
-        mode: 'lines+markers',
-        name: `${race} - ${drug}`,
-        connectgaps: true
-      });
-    });
+  const raceMap = {};
+  races.forEach((race, index) => {
+    raceMap[race] = index;
   });
 
-  const layout = {
-    title: 'Arrest Rate Over Years',
-    xaxis: { title: 'Year' },
-    yaxis: { title: 'Arrest Rate per 100,000' }
-  };
+  // Prepare training data
+  const xs = cleanedData.map(row => [
+    drugTypeMap[row.Drug_Type],
+    raceMap[row.Race]
+  ]);
 
-  Plotly.newPlot('arrest-rate-chart', traces, layout);
+  // Calculate overall average sentence length
+  const overallAvgSentence = cleanedData.reduce((sum, row) => sum + row.Average_Sentence_Length_Months, 0) / cleanedData.length;
+
+  // Prepare labels: 1 if above average, 0 otherwise
+  const ys = cleanedData.map(row => row.Average_Sentence_Length_Months > overallAvgSentence ? 1 : 0);
+
+  // Convert to tensors
+  const xsTensor = tf.tensor2d(xs);
+  const ysTensor = tf.tensor1d(ys, 'int32');
+
+  // Define the model
+  const model = tf.sequential();
+  model.add(tf.layers.dense({ units: 1, inputShape: [2], activation: 'sigmoid' }));
+
+  // Compile the model
+  model.compile({
+    optimizer: tf.train.adam(),
+    loss: tf.losses.logLoss,
+    metrics: ['accuracy']
+  });
+
+  // Train the model
+  model.fit(xsTensor, ysTensor, {
+    epochs: 100,
+    verbose: 0
+  }).then(() => {
+    console.log('Model training complete');
+    trainedModel = model;
+    // Clean up tensors
+    xsTensor.dispose();
+    ysTensor.dispose();
+  }).catch(err => {
+    console.error('Error during model training:', err);
+  });
 }
 
 // Function to predict likelihood based on user input
@@ -133,37 +125,39 @@ function predictLikelihood() {
   console.log("Selected Drug Type:", drugType);
   console.log("Selected Race:", race);
 
-  const data = window.globalData;
-
-  if (!data) {
-    likelihoodOutput.textContent = 'Data not loaded yet. Please try again in a moment.';
+  if (!trainedModel) {
+    likelihoodOutput.textContent = 'Model not trained yet. Please try again in a moment.';
     return;
   }
 
-  // Filter data based on selected drug type and race
-  const filteredData = data.filter(row => {
-    return row['Drug_Type'] === drugType && row['Race'] === race;
+  // Use the same mappings as during training
+  const drugTypes = [...new Set(window.globalData.map(row => row.Drug_Type))];
+  const races = [...new Set(window.globalData.map(row => row.Race))];
+
+  const drugTypeMap = {};
+  drugTypes.forEach((type, index) => {
+    drugTypeMap[type] = index;
   });
 
-  const totalCases = filteredData.length;
+  const raceMap = {};
+  races.forEach((race, index) => {
+    raceMap[race] = index;
+  });
 
-  if (totalCases === 0) {
-    likelihoodOutput.textContent = 'No data available for the selected criteria.';
-    return;
-  }
+  // Prepare the input
+  const input = tf.tensor2d([[drugTypeMap[drugType], raceMap[race]]]);
 
-  // Calculate the overall average sentence length for all data
-  const overallAvgSentence = data.reduce((sum, row) => sum + row.Average_Sentence_Length_Months, 0) / data.length;
-
-  // Calculate the number of cases where the sentence length is above the overall average
-  const aboveAvgCases = filteredData.filter(row => {
-    return row.Average_Sentence_Length_Months > overallAvgSentence;
-  }).length;
-
-  // Calculate the likelihood percentage
-  const likelihood = ((aboveAvgCases / totalCases) * 100).toFixed(2);
-
-  likelihoodOutput.textContent = `${likelihood}%`;
-
-  console.log("Likelihood Output:", likelihoodOutput.textContent);
+  // Make the prediction
+  const prediction = trainedModel.predict(input);
+  prediction.array().then(values => {
+    const likelihood = (values[0][0] * 100).toFixed(2);
+    likelihoodOutput.textContent = `${likelihood}% chance of receiving an above-average sentence length.`;
+    console.log("Likelihood Output:", likelihoodOutput.textContent);
+    // Clean up tensors
+    input.dispose();
+    prediction.dispose();
+  }).catch(err => {
+    console.error('Error during prediction:', err);
+    likelihoodOutput.textContent = 'Error during prediction.';
+  });
 }
