@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Racial Disparities in Sentencing</title>
+  <link rel="stylesheet" href="styles.css">
+
   <!-- Include Plotly.js for interactive charts -->
   <script src="https://cdn.plot.ly/plotly-latest.min.js" defer></script>
 
@@ -33,7 +38,8 @@
   <section id="data-analysis">
     <h2>Data Analysis</h2>
     <h3>Percentage of Crack Cocaine Incarcerations by Race</h3>
-    <canvas id="crackCocaineChart" width="400" height="400"></canvas>
+    <!-- Updated to use Plotly div instead of canvas -->
+    <div id="crackCocaineChart" style="width: 100%; max-width: 600px; height: 400px;"></div>
   </section>
 
   <section id="methodology">
