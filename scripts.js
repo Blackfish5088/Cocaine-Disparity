@@ -28,6 +28,15 @@ function createVisualizations(data) {
   const races = Object.keys(raceCounts);
   const counts = Object.values(raceCounts);
 
+  // Create bar chart
+  createBarChart(races, counts);
+
+  // Create pie chart
+  createPieChart(races, counts);
+}
+
+// Function to create the bar chart
+function createBarChart(races, counts) {
   const trace = {
     x: races,
     y: counts,
@@ -44,7 +53,48 @@ function createVisualizations(data) {
   Plotly.newPlot('race-sentences-chart', [trace], layout);
 }
 
-// Function to predict likelihood based on user input
+// Function to create the interactive pie chart
+function createPieChart(races, counts) {
+  const dataPie = [{
+    values: counts,
+    labels: races,
+    type: 'pie',
+    textinfo: 'label+percent',
+    insidetextorientation: 'radial',
+    hole: 0, // Set to 0.4 for a donut chart
+    marker: {
+      line: {
+        color: 'white',
+        width: 2
+      }
+    },
+    pull: 0 // Initial pull value
+  }];
+
+  const layoutPie = {
+    title: 'Distribution of Sentences by Race',
+    showlegend: true
+  };
+
+  const pieDiv = document.getElementById('race-sentences-pie-chart');
+
+  Plotly.newPlot(pieDiv, dataPie, layoutPie);
+
+  // Add hover events to expand slices
+  pieDiv.on('plotly_hover', function(data) {
+    const pts = data.points[0];
+    const update = {'pull': 0.1}; // Expand the slice
+    Plotly.restyle(pieDiv, update, [pts.pointNumber]);
+  });
+
+  pieDiv.on('plotly_unhover', function(data) {
+    const pts = data.points[0];
+    const update = {'pull': 0}; // Reset the slice
+    Plotly.restyle(pieDiv, update, [pts.pointNumber]);
+  });
+}
+
+// Function to predict likelihood based on user input (remains unchanged)
 function predictLikelihood() {
   console.log("predictLikelihood function triggered");
 
