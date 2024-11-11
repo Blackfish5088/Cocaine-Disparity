@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (results && results.data) {
         window.globalData = results.data;
         console.log("Data successfully loaded");
+        populateYearOptions(window.globalData);
         // No need to call createVisualizations since we're not using graphs
       } else {
         console.error("Data loading failed. Please check the CSV file path and content.");
@@ -20,24 +21,47 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+// Function to populate the Year select options based on data
+function populateYearOptions(data) {
+  const yearElement = document.getElementById('year');
+  if (!yearElement) {
+    console.error("Year select element not found");
+    return;
+  }
+
+  // Get unique years from the data
+  const years = [...new Set(data.map(row => row['Year']))].sort();
+
+  // Create option elements for each year
+  years.forEach(year => {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    yearElement.appendChild(option);
+  });
+}
+
 // Function to predict likelihood based on user input
 function predictLikelihood() {
   console.log("predictLikelihood function triggered");
 
   const drugTypeElement = document.getElementById('drugType');
   const raceElement = document.getElementById('race');
+  const yearElement = document.getElementById('year');
   const likelihoodOutput = document.getElementById('likelihoodOutput');
 
-  if (!drugTypeElement || !raceElement || !likelihoodOutput) {
+  if (!drugTypeElement || !raceElement || !yearElement || !likelihoodOutput) {
     console.error("One or more elements not found");
     return;
   }
 
   const drugType = drugTypeElement.value;
   const race = raceElement.value;
+  const year = parseInt(yearElement.value);
 
   console.log("Selected Drug Type:", drugType);
   console.log("Selected Race:", race);
+  console.log("Selected Year:", year);
 
   const data = window.globalData;
 
@@ -46,9 +70,9 @@ function predictLikelihood() {
     return;
   }
 
-  // Filter data based on selected drug type and race
+  // Filter data based on selected drug type, race, and year
   const filteredData = data.filter(row => {
-    return row['Drug_Type'] === drugType && row['Race'] === race;
+    return row['Drug_Type'] === drugType && row['Race'] === race && row['Year'] === year;
   });
 
   const totalCases = filteredData.length;
@@ -58,13 +82,13 @@ function predictLikelihood() {
     return;
   }
 
-  // Calculate the number of sentences over 36 months
-  const longSentences = filteredData.filter(row => {
-    return parseFloat(row['Average_Sentence_Length_Months']) > 36;
+  // Calculate the number of sentences less than 36 months
+  const shortSentences = filteredData.filter(row => {
+    return parseFloat(row['Average_Sentence_Length_Months']) < 36;
   }).length;
 
   // Calculate the likelihood percentage
-  const likelihood = ((longSentences / totalCases) * 100).toFixed(2);
+  const likelihood = ((shortSentences / totalCases) * 100).toFixed(2);
 
   likelihoodOutput.textContent = `${likelihood}%`;
 
