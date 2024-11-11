@@ -7,16 +7,21 @@ document.addEventListener('DOMContentLoaded', function() {
       const data = results.data;
 
       const races = [];
-      const crackCounts = [];
-      const powderCounts = [];
+      const crackSentences = [];
+      const powderSentences = [];
 
+      // Process data for bar chart
       data.forEach(row => {
-        races.push(row.Race);
-        crackCounts.push(parseInt(row.Crack_Cocaine_Incarcerated, 10));
-        powderCounts.push(parseInt(row.Powder_Cocaine_Incarcerated, 10));
+        if (!races.includes(row.Race)) {
+          races.push(row.Race);
+        }
+        if (row.Drug_Type === 'Crack') {
+          crackSentences.push(parseFloat(row.Average_Sentence_Length_Months));
+        } else if (row.Drug_Type === 'Powder Cocaine') {
+          powderSentences.push(parseFloat(row.Average_Sentence_Length_Months));
+        }
       });
 
-      // Check if the bar chart canvas exists
       const ctx1 = document.getElementById('incarcerationChart');
       if (ctx1) {
         new Chart(ctx1.getContext('2d'), {
@@ -26,12 +31,12 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [
               {
                 label: 'Crack Cocaine',
-                data: crackCounts,
+                data: crackSentences,
                 backgroundColor: 'rgba(255, 99, 132, 0.5)'
               },
               {
                 label: 'Powder Cocaine',
-                data: powderCounts,
+                data: powderSentences,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)'
               }
             ]
@@ -39,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
           options: {
             responsive: true,
             scales: {
-              y: { beginAtZero: true }
+              y: { beginAtZero: true, title: { display: true, text: 'Average Sentence Length (Months)' } }
             }
           }
         });
@@ -57,67 +62,63 @@ document.addEventListener('DOMContentLoaded', function() {
       const data = results.data;
 
       const raceLabels = [];
-      const crackCounts = [];
+      const arrestRates = [];
 
+      // Process data for pie chart (Crack offenses only)
       data.forEach(row => {
-        if (row.Offense_Type === 'Crack Cocaine') {
+        if (row.Drug_Type === 'Crack' && !raceLabels.includes(row.Race)) {
           raceLabels.push(row.Race);
-          crackCounts.push(parseInt(row.Incarcerated, 10));
+          arrestRates.push(parseFloat(row.Arrest_Rate_per_100000));
         }
       });
 
-      const crackData = {
-        labels: raceLabels,
-        datasets: [
-          {
-            data: crackCounts,
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.6)',
-              'rgba(54, 162, 235, 0.6)',
-              'rgba(75, 192, 192, 0.6)',
-              'rgba(153, 102, 255, 0.6)',
-              'rgba(255, 159, 64, 0.6)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-          }
-        ]
-      };
-
-      const config = {
-        type: 'pie',
-        data: crackData,
-        options: {
-          responsive: true,
-          plugins: {
-            tooltip: {
-              enabled: true,
-              callbacks: {
-                label: function(context) {
-                  const label = context.label || '';
-                  const value = context.raw || 0;
-                  return `${label}: ${value} incarcerations`;
-                }
-              }
-            },
-            legend: {
-              display: true,
-              position: 'right'
-            }
-          }
-        }
-      };
-
-      // Check if the pie chart canvas exists
       const ctx2 = document.getElementById('crackCocaineChart');
       if (ctx2) {
-        new Chart(ctx2.getContext('2d'), config);
+        new Chart(ctx2.getContext('2d'), {
+          type: 'pie',
+          data: {
+            labels: raceLabels,
+            datasets: [
+              {
+                data: arrestRates,
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.6)',
+                  'rgba(54, 162, 235, 0.6)',
+                  'rgba(75, 192, 192, 0.6)',
+                  'rgba(153, 102, 255, 0.6)',
+                  'rgba(255, 159, 64, 0.6)'
+                ],
+                borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              tooltip: {
+                enabled: true,
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.raw || 0;
+                    return `${label}: ${value} per 100,000`;
+                  }
+                }
+              },
+              legend: {
+                display: true,
+                position: 'right'
+              }
+            }
+          }
+        });
       } else {
         console.error("Canvas element with id 'crackCocaineChart' not found.");
       }
