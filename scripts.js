@@ -1,4 +1,4 @@
-// Define the predictLikelihood function globally
+// Define the predictLikelihood function globally on the window object
 window.predictLikelihood = function() {
   console.log("predictLikelihood function triggered");
 
