@@ -16,7 +16,7 @@
 </head>
 <body>
   <header>
-    <h1>Racial Disparities in Crack vs. Cocaine Sentencing</h1>
+    <h1>Racial Disparities in Crack vs. Powder Cocaine Sentencing</h1>
   </header>
 
   <nav>
@@ -36,8 +36,8 @@
 
   <section id="data-analysis">
     <h2>Data Analysis</h2>
-    <div id="race-sentences-chart"></div>
-    <div id="race-sentences-pie-chart"></div>
+    <div id="average-sentence-chart"></div>
+    <div id="arrest-rate-chart"></div>
   </section>
 
   <section id="methodology">
@@ -52,7 +52,7 @@
 
   <!-- Likelihood Prediction Section -->
   <section id="likelihood">
-    <h2>Predict Likelihood of Sentence Length &gt; 36 Months</h2>
+    <h2>Predict Likelihood of Above Average Sentence Length</h2>
     <form id="likelihoodForm">
       <label for="drugType">Drug Type:</label>
       <select id="drugType">
@@ -62,15 +62,15 @@
 
       <label for="race">Race:</label>
       <select id="race">
-        <option value="White">White</option>
         <option value="Black">Black</option>
+        <option value="White">White</option>
         <option value="Hispanic">Hispanic</option>
       </select>
 
       <button type="button" onclick="predictLikelihood()">Predict Likelihood</button>
     </form>
 
-    <p>Likelihood of Sentence Length &gt; 36 months: <span id="likelihoodOutput"></span></p>
+    <p>Likelihood of Receiving Above Average Sentence Length: <span id="likelihoodOutput"></span></p>
   </section>
 
   <footer>
