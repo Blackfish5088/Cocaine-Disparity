@@ -91,8 +91,8 @@ window.predictLikelihood = function() {
   ];
 
   // Dummy intercept and coefficients for example
-  const intercept = -1.23;  // Replace with actual intercept
-  const coefficients = [0.56, -0.34, 0.78];  // Replace with actual coefficients
+  const intercept = -1.23;
+  const coefficients = [0.56, -0.34, 0.78];
 
   // Calculate the linear combination of inputs and coefficients
   let linearCombination = intercept;
