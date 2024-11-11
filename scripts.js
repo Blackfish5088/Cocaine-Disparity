@@ -36,11 +36,14 @@ function createVisualizations(data) {
   createArrestRateChart(data);
 }
 
-// Existing visualization functions remain unchanged
-// ... [createAverageSentenceChart and createArrestRateChart functions] ...
+// ... [Existing visualization functions: createAverageSentenceChart and createArrestRateChart] ...
 
 // Global variable to hold the trained model
 let trainedModel;
+
+// Global variables for mappings
+let drugTypeMap = {};
+let raceMap = {};
 
 // Function to train the machine learning model
 function trainModel(data) {
@@ -49,17 +52,15 @@ function trainModel(data) {
     row.Drug_Type && row.Race && typeof row.Average_Sentence_Length_Months === 'number'
   );
 
-  // Convert categorical data to numerical using one-hot encoding
+  // Convert categorical data to numerical using mappings
   const drugTypes = [...new Set(cleanedData.map(row => row.Drug_Type))];
   const races = [...new Set(cleanedData.map(row => row.Race))];
 
   // Create mappings
-  const drugTypeMap = {};
   drugTypes.forEach((type, index) => {
     drugTypeMap[type] = index;
   });
 
-  const raceMap = {};
   races.forEach((race, index) => {
     raceMap[race] = index;
   });
@@ -130,19 +131,11 @@ function predictLikelihood() {
     return;
   }
 
-  // Use the same mappings as during training
-  const drugTypes = [...new Set(window.globalData.map(row => row.Drug_Type))];
-  const races = [...new Set(window.globalData.map(row => row.Race))];
-
-  const drugTypeMap = {};
-  drugTypes.forEach((type, index) => {
-    drugTypeMap[type] = index;
-  });
-
-  const raceMap = {};
-  races.forEach((race, index) => {
-    raceMap[race] = index;
-  });
+  // Use the mappings created during training
+  if (!(drugType in drugTypeMap) || !(race in raceMap)) {
+    likelihoodOutput.textContent = 'Invalid input selection.';
+    return;
+  }
 
   // Prepare the input
   const input = tf.tensor2d([[drugTypeMap[drugType], raceMap[race]]]);
