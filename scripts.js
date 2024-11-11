@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     download: true,
     header: true,
     complete: function(results) {
+      console.log("Data parsing complete"); // Check if data parsing runs
       const data = results.data;
 
       const raceLabels = [];
@@ -17,6 +18,9 @@ document.addEventListener('DOMContentLoaded', function() {
           if (!isNaN(arrestRate)) arrestRates.push(arrestRate);
         }
       });
+
+      console.log("Race Labels:", raceLabels); // Log the processed labels
+      console.log("Arrest Rates:", arrestRates); // Log the processed data
 
       const ctx = document.getElementById('crackCocaineChart');
       if (ctx && arrestRates.length) {
