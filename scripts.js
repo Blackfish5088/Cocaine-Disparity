@@ -19,86 +19,99 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to create visualizations using Plotly.js
 function createVisualizations(data) {
-  // Aggregate data by race
-  const raceCounts = {};
+  // Filter out any empty or invalid rows
+  data = data.filter(row => row.Year && row.Drug_Type && row.Race);
 
+  // Convert Year to string if necessary
   data.forEach(row => {
-    const race = row['Race'];
-    if (race) {
-      raceCounts[race] = (raceCounts[race] || 0) + 1;
-    }
+    row.Year = row.Year.toString();
   });
 
-  const races = Object.keys(raceCounts);
-  const counts = Object.values(raceCounts);
+  // Create an average sentence length chart
+  createAverageSentenceChart(data);
 
-  // Console logs for debugging
-  console.log("Races:", races);
-  console.log("Counts:", counts);
-
-  // Create bar chart
-  createBarChart(races, counts);
-
-  // Create pie chart
-  createPieChart(races, counts);
+  // Create an arrest rate chart
+  createArrestRateChart(data);
 }
 
-// Function to create the bar chart
-function createBarChart(races, counts) {
-  const trace = {
-    x: races,
-    y: counts,
-    type: 'bar',
-    marker: { color: 'rgb(142,124,195)' }
-  };
+// Function to create the average sentence length chart
+function createAverageSentenceChart(data) {
+  const races = ['Black', 'White', 'Hispanic'];
+  const drugTypes = ['Crack', 'Powder Cocaine'];
+  const years = [...new Set(data.map(row => row.Year))].sort();
+
+  const traces = [];
+
+  races.forEach(race => {
+    drugTypes.forEach(drug => {
+      const filteredData = data.filter(row => row.Race === race && row.Drug_Type === drug);
+      const avgSentenceByYear = years.map(year => {
+        const yearData = filteredData.filter(row => row.Year === year);
+        if (yearData.length > 0) {
+          const avgSentence = yearData.reduce((sum, row) => sum + row.Average_Sentence_Length_Months, 0) / yearData.length;
+          return avgSentence;
+        } else {
+          return null;
+        }
+      });
+
+      traces.push({
+        x: years,
+        y: avgSentenceByYear,
+        mode: 'lines+markers',
+        name: `${race} - ${drug}`,
+        connectgaps: true
+      });
+    });
+  });
 
   const layout = {
-    title: 'Number of Sentences by Race',
-    xaxis: { title: 'Race' },
-    yaxis: { title: 'Number of Sentences' }
+    title: 'Average Sentence Length Over Years',
+    xaxis: { title: 'Year' },
+    yaxis: { title: 'Average Sentence Length (Months)' }
   };
 
-  Plotly.newPlot('race-sentences-chart', [trace], layout);
+  Plotly.newPlot('average-sentence-chart', traces, layout);
 }
 
-// Function to create the interactive pie chart
-function createPieChart(races, counts) {
-  const dataPie = [{
-    values: counts,
-    labels: races,
-    type: 'pie',
-    textinfo: 'label+percent',
-    insidetextorientation: 'radial',
-    marker: {
-      line: {
-        color: 'white',
-        width: 2
-      }
-    },
-    pull: 0 // Initial pull value
-  }];
+// Function to create the arrest rate chart
+function createArrestRateChart(data) {
+  const races = ['Black', 'White', 'Hispanic'];
+  const drugTypes = ['Crack', 'Powder Cocaine'];
+  const years = [...new Set(data.map(row => row.Year))].sort();
 
-  const layoutPie = {
-    title: 'Distribution of Sentences by Race',
-    showlegend: true
+  const traces = [];
+
+  races.forEach(race => {
+    drugTypes.forEach(drug => {
+      const filteredData = data.filter(row => row.Race === race && row.Drug_Type === drug);
+      const arrestRateByYear = years.map(year => {
+        const yearData = filteredData.filter(row => row.Year === year);
+        if (yearData.length > 0) {
+          const avgArrestRate = yearData.reduce((sum, row) => sum + row.Arrest_Rate_per_100000, 0) / yearData.length;
+          return avgArrestRate;
+        } else {
+          return null;
+        }
+      });
+
+      traces.push({
+        x: years,
+        y: arrestRateByYear,
+        mode: 'lines+markers',
+        name: `${race} - ${drug}`,
+        connectgaps: true
+      });
+    });
+  });
+
+  const layout = {
+    title: 'Arrest Rate Over Years',
+    xaxis: { title: 'Year' },
+    yaxis: { title: 'Arrest Rate per 100,000' }
   };
 
-  const pieDiv = document.getElementById('race-sentences-pie-chart');
-
-  Plotly.newPlot(pieDiv, dataPie, layoutPie);
-
-  // Add hover events to expand slices
-  pieDiv.on('plotly_hover', function(data) {
-    const pts = data.points[0];
-    const update = { 'pull': 0.1 }; // Expand the slice
-    Plotly.restyle(pieDiv, update, [pts.pointNumber]);
-  });
-
-  pieDiv.on('plotly_unhover', function(data) {
-    const pts = data.points[0];
-    const update = { 'pull': 0 }; // Reset the slice
-    Plotly.restyle(pieDiv, update, [pts.pointNumber]);
-  });
+  Plotly.newPlot('arrest-rate-chart', traces, layout);
 }
 
 // Function to predict likelihood based on user input
@@ -129,7 +142,7 @@ function predictLikelihood() {
 
   // Filter data based on selected drug type and race
   const filteredData = data.filter(row => {
-    return row['DrugType'] === drugType && row['Race'] === race;
+    return row['Drug_Type'] === drugType && row['Race'] === race;
   });
 
   const totalCases = filteredData.length;
@@ -139,13 +152,16 @@ function predictLikelihood() {
     return;
   }
 
-  // Calculate the number of sentences over 36 months
-  const longSentences = filteredData.filter(row => {
-    return parseFloat(row['SentenceLength']) > 36;
+  // Calculate the overall average sentence length for all data
+  const overallAvgSentence = data.reduce((sum, row) => sum + row.Average_Sentence_Length_Months, 0) / data.length;
+
+  // Calculate the number of cases where the sentence length is above the overall average
+  const aboveAvgCases = filteredData.filter(row => {
+    return row.Average_Sentence_Length_Months > overallAvgSentence;
   }).length;
 
   // Calculate the likelihood percentage
-  const likelihood = ((longSentences / totalCases) * 100).toFixed(2);
+  const likelihood = ((aboveAvgCases / totalCases) * 100).toFixed(2);
 
   likelihoodOutput.textContent = `${likelihood}%`;
 
