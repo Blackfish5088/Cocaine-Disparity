@@ -38,8 +38,85 @@ function createVisualizations(data) {
   createArrestRateChart(data);
 }
 
-// Existing visualization functions
-// ... [createAverageSentenceChart and createArrestRateChart functions] ...
+// Function to create the average sentence length chart
+function createAverageSentenceChart(data) {
+  const races = ['Black', 'White', 'Hispanic'];
+  const drugTypes = ['Crack', 'Powder Cocaine'];
+  const years = [...new Set(data.map(row => row.Year))].sort();
+
+  const traces = [];
+
+  races.forEach(race => {
+    drugTypes.forEach(drug => {
+      const filteredData = data.filter(row => row.Race === race && row.Drug_Type === drug);
+      const avgSentenceByYear = years.map(year => {
+        const yearData = filteredData.filter(row => row.Year === year);
+        if (yearData.length > 0) {
+          const avgSentence = yearData.reduce((sum, row) => sum + row.Average_Sentence_Length_Months, 0) / yearData.length;
+          return avgSentence;
+        } else {
+          return null;
+        }
+      });
+
+      traces.push({
+        x: years,
+        y: avgSentenceByYear,
+        mode: 'lines+markers',
+        name: `${race} - ${drug}`,
+        connectgaps: true
+      });
+    });
+  });
+
+  const layout = {
+    title: 'Average Sentence Length Over Years',
+    xaxis: { title: 'Year' },
+    yaxis: { title: 'Average Sentence Length (Months)' }
+  };
+
+  Plotly.newPlot('average-sentence-chart', traces, layout);
+}
+
+// Function to create the arrest rate chart
+function createArrestRateChart(data) {
+  const races = ['Black', 'White', 'Hispanic'];
+  const drugTypes = ['Crack', 'Powder Cocaine'];
+  const years = [...new Set(data.map(row => row.Year))].sort();
+
+  const traces = [];
+
+  races.forEach(race => {
+    drugTypes.forEach(drug => {
+      const filteredData = data.filter(row => row.Race === race && row.Drug_Type === drug);
+      const arrestRateByYear = years.map(year => {
+        const yearData = filteredData.filter(row => row.Year === year);
+        if (yearData.length > 0) {
+          const avgArrestRate = yearData.reduce((sum, row) => sum + row.Arrest_Rate_per_100000, 0) / yearData.length;
+          return avgArrestRate;
+        } else {
+          return null;
+        }
+      });
+
+      traces.push({
+        x: years,
+        y: arrestRateByYear,
+        mode: 'lines+markers',
+        name: `${race} - ${drug}`,
+        connectgaps: true
+      });
+    });
+  });
+
+  const layout = {
+    title: 'Arrest Rate Over Years',
+    xaxis: { title: 'Year' },
+    yaxis: { title: 'Arrest Rate per 100,000' }
+  };
+
+  Plotly.newPlot('arrest-rate-chart', traces, layout);
+}
 
 // Global variable to hold the precomputed likelihoods
 let likelihoods = {};
