@@ -1,49 +1,33 @@
-document.addEventListener('DOMContentLoaded', function() {
-  // Load data from DF.csv for the pie chart
-  Papa.parse('data/DF.csv', {
-    download: true,
-    header: true,
-    complete: function(results) {
-      const data = results.data;
+// Define the predictLikelihood function to be accessible globally
+window.predictLikelihood = function() {
+  console.log("predictLikelihood function triggered");
 
-      const raceLabels = [];
-      const arrestRates = [];
+  // Get selected values for Drug Type and Race
+  const drugType = document.getElementById('drugType').value;
+  const race = document.getElementById('race').value;
 
-      // Filter data to include only Crack offenses, then group by Race
-      data.forEach(row => {
-        if (row.Drug_Type === 'Crack') {
-          const race = row.Race;
-          const arrestRate = parseFloat(row.Arrest_Rate_per_100000);
+  // Encode inputs based on the model's structure
+  const featureArray = [
+    drugType === 'Powder Cocaine' ? 1 : 0,
+    race === 'Black' ? 1 : 0,
+    race === 'Hispanic' ? 1 : 0
+  ];
 
-          if (!isNaN(arrestRate)) {
-            // Add race if not already present
-            if (!raceLabels.includes(race)) {
-              raceLabels.push(race);
-              arrestRates.push(arrestRate);
-            }
-          }
-        }
-      });
+  // Dummy intercept and coefficients for the example
+  const intercept = -1.23;
+  const coefficients = [0.56, -0.34, 0.78];
 
-      // Use Plotly to create the pie chart
-      const plotData = [{
-        type: 'pie',
-        labels: raceLabels,
-        values: arrestRates,
-        textinfo: 'label+percent',
-        hoverinfo: 'label+value',
-        marker: {
-          colors: ['#FF6384', '#36A2EB', '#FFCE56', '#AA65B2', '#FF9F40']
-        }
-      }];
+  // Calculate the linear combination of inputs and coefficients
+  let linearCombination = intercept;
+  for (let i = 0; i < featureArray.length; i++) {
+    linearCombination += coefficients[i] * featureArray[i];
+  }
 
-      const layout = {
-        title: 'Percentage of Crack Cocaine Incarcerations by Race',
-        height: 400,
-        width: 500
-      };
+  // Apply the logistic function to get a probability
+  const probability = 1 / (1 + Math.exp(-linearCombination));
+  console.log("Probability:", probability);
 
-      Plotly.newPlot('crackCocaineChart', plotData, layout);
-    }
-  });
-});
+  // Convert to percentage and display the result
+  const likelihoodPercentage = (probability * 100).toFixed(2);
+  document.getElementById('likelihoodOutput').textContent = likelihoodPercentage + '%';
+};
