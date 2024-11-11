@@ -133,9 +133,15 @@ document.addEventListener('DOMContentLoaded', function() {
 const intercept = -1.23;  // Replace with your model's intercept
 const coefficients = [0.56, -0.34, 0.78];  // Replace with your model's coefficients
 
+// Define predictLikelihood as a standalone function so it's globally accessible
 function predictLikelihood() {
+  console.log("predictLikelihood function triggered");
+
   const drugType = document.getElementById('drugType').value;
   const race = document.getElementById('race').value;
+
+  console.log("Selected Drug Type:", drugType);
+  console.log("Selected Race:", race);
 
   // Encode inputs based on the model's structure
   const featureArray = [
@@ -144,14 +150,19 @@ function predictLikelihood() {
     race === 'Hispanic' ? 1 : 0
   ];
 
+  console.log("Feature Array:", featureArray);
+
   // Calculate the linear combination of inputs and coefficients
   let linearCombination = intercept;
   for (let i = 0; i < featureArray.length; i++) {
     linearCombination += coefficients[i] * featureArray[i];
   }
 
+  console.log("Linear Combination:", linearCombination);
+
   // Apply the logistic function to get a probability
   const probability = 1 / (1 + Math.exp(-linearCombination));
+  console.log("Probability:", probability);
 
   // Convert to percentage and display the result
   const likelihoodPercentage = (probability * 100).toFixed(2);
