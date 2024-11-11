@@ -1,14 +1,22 @@
 // Ensure scripts run after DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   // Load the CSV data using PapaParse
-  Papa.parse('DF.csv', {
+  Papa.parse('data/DF.csv', { // Update to correct path if the file is in a folder
     download: true,
     header: true,
     dynamicTyping: true, // Converts numeric strings to numbers
     complete: function(results) {
-      window.globalData = results.data;
-      // Create visualizations after data is loaded
-      createVisualizations(window.globalData);
+      if (results && results.data) {
+        window.globalData = results.data;
+        console.log("Data successfully loaded");
+        // Create visualizations after data is loaded
+        createVisualizations(window.globalData);
+      } else {
+        console.error("Data loading failed. Please check the CSV file path and content.");
+      }
+    },
+    error: function(err) {
+      console.error("PapaParse error:", err);
     }
   });
 });
