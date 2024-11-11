@@ -1,61 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Load the CSV data for the bar chart
-  Papa.parse('data/DF.csv', {
-    download: true,
-    header: true,
-    complete: function(results) {
-      const data = results.data;
-
-      const races = [];
-      const crackSentences = [];
-      const powderSentences = [];
-
-      // Process data for bar chart
-      data.forEach(row => {
-        if (!races.includes(row.Race)) {
-          races.push(row.Race);
-        }
-        if (row.Drug_Type === 'Crack') {
-          const sentence = parseFloat(row.Average_Sentence_Length_Months);
-          if (!isNaN(sentence)) crackSentences.push(sentence);
-        } else if (row.Drug_Type === 'Powder Cocaine') {
-          const sentence = parseFloat(row.Average_Sentence_Length_Months);
-          if (!isNaN(sentence)) powderSentences.push(sentence);
-        }
-      });
-
-      const ctx1 = document.getElementById('incarcerationChart');
-      if (ctx1 && crackSentences.length && powderSentences.length) {
-        new Chart(ctx1.getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: races,
-            datasets: [
-              {
-                label: 'Crack Cocaine',
-                data: crackSentences,
-                backgroundColor: 'rgba(255, 99, 132, 0.5)'
-              },
-              {
-                label: 'Powder Cocaine',
-                data: powderSentences,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)'
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: { beginAtZero: true, title: { display: true, text: 'Average Sentence Length (Months)' } }
-            }
-          }
-        });
-      } else {
-        console.error("Canvas element with id 'incarcerationChart' not found or data is missing.");
-      }
-    }
-  });
-
   // Load the CSV data for the pie chart
   Papa.parse('data/DF.csv', {
     download: true,
@@ -75,9 +18,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
 
-      const ctx2 = document.getElementById('crackCocaineChart');
-      if (ctx2 && arrestRates.length) {
-        new Chart(ctx2.getContext('2d'), {
+      const ctx = document.getElementById('crackCocaineChart');
+      if (ctx && arrestRates.length) {
+        new Chart(ctx.getContext('2d'), {
           type: 'pie',
           data: {
             labels: raceLabels,
@@ -130,41 +73,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Likelihood Prediction Model Code
-const intercept = -1.23;  // Replace with your model's intercept
-const coefficients = [0.56, -0.34, 0.78];  // Replace with your model's coefficients
-
-// Attach predictLikelihood to the window object to make it globally accessible
-window.predictLikelihood = function() {
-  console.log("predictLikelihood function triggered");
-
-  const drugType = document.getElementById('drugType').value;
-  const race = document.getElementById('race').value;
-
-  console.log("Selected Drug Type:", drugType);
-  console.log("Selected Race:", race);
-
-  // Encode inputs based on the model's structure
-  const featureArray = [
-    drugType === 'Powder Cocaine' ? 1 : 0,
-    race === 'Black' ? 1 : 0,
-    race === 'Hispanic' ? 1 : 0
-  ];
-
-  console.log("Feature Array:", featureArray);
-
-  // Calculate the linear combination of inputs and coefficients
-  let linearCombination = intercept;
-  for (let i = 0; i < featureArray.length; i++) {
-    linearCombination += coefficients[i] * featureArray[i];
-  }
-
-  console.log("Linear Combination:", linearCombination);
-
-  // Apply the logistic function to get a probability
-  const probability = 1 / (1 + Math.exp(-linearCombination));
-  console.log("Probability:", probability);
-
-  // Convert to percentage and display the result
-  const likelihoodPercentage = (probability * 100).toFixed(2);
-  document.getElementById('likelihoodOutput').textContent = likelihoodPercentage;
-};
+const intercept =
