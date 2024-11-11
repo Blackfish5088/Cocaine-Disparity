@@ -1,4 +1,4 @@
-/* styles.css */
+/* General Body Styling */
 body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
@@ -7,6 +7,7 @@ body {
   color: #333;
 }
 
+/* Header Styling */
 header {
   background-color: #4CAF50;
   color: #fff;
@@ -14,11 +15,15 @@ header {
   text-align: center;
 }
 
+/* Navigation Styling */
 nav ul {
-  list-style: none;
   display: flex;
+  gap: 15px;
+  list-style: none;
+  padding: 10px 0;
+  background-color: #ffebcd; /* Light peach background for the nav */
+  border-radius: 8px;
   justify-content: center;
-  background: #333;
 }
 
 nav ul li {
@@ -26,19 +31,16 @@ nav ul li {
 }
 
 nav ul li a {
-  color: white;
+  color: #1a73e8;
+  font-weight: bold;
   text-decoration: none;
 }
 
+/* Section Styling */
 section {
   padding: 1.5em;
 }
 
-h2 {
-  color: #4CAF50;
-}
-
-/* Styling for section headers */
 h2 {
   font-size: 2rem;
   color: #1a73e8; /* Bright blue for main headers */
@@ -53,7 +55,7 @@ h3 {
   margin-top: 20px;
 }
 
-/* Add a background color to the Methodology section */
+/* Methodology Section Styling */
 #methodology {
   background-color: #f9f9f9; /* Light grey background */
   padding: 20px;
@@ -62,36 +64,20 @@ h3 {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-/* Style paragraphs within Methodology section */
+/* Paragraph Styling in Methodology Section */
 #methodology p {
   font-size: 1rem;
   color: #333;
   margin: 10px 0;
 }
 
-/* Emphasize key terms within paragraphs */
+/* Emphasize Key Terms within Methodology Section */
 #methodology strong {
   color: #1a73e8; /* Match color with headers for consistency */
   font-weight: bold;
 }
 
-/* Add some spacing around the navigation menu */
-nav ul {
-  display: flex;
-  gap: 15px;
-  list-style: none;
-  padding: 10px 0;
-  background-color: #ffebcd; /* Light peach background for the nav */
-  border-radius: 8px;
-}
-
-nav ul li a {
-  text-decoration: none;
-  color: #1a73e8;
-  font-weight: bold;
-}
-
-/* Footer styling */
+/* Footer Styling */
 footer {
   text-align: center;
   padding: 1em;
@@ -99,4 +85,20 @@ footer {
   color: white;
   font-size: 0.9rem;
   margin-top: 30px;
+}
+
+/* Button Styling with Hover Effect */
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.3s ease; /* Smooth transition for hover effect */
+  background-color: #4CAF50; /* Customize as needed */
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+button:hover {
+  transform: scale(1.1); /* Grows the button by 10% on hover */
 }
