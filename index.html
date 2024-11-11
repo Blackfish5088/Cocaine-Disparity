@@ -23,6 +23,7 @@
       <li><a href="#data-analysis">Data Analysis</a></li>
       <li><a href="#methodology">Methodology</a></li>
       <li><a href="#about">About</a></li>
+      <li><a href="#likelihood">Predict Likelihood</a></li>
     </ul>
   </nav>
 
@@ -36,48 +37,52 @@
     
     <!-- START of Canvas Element for Crack Cocaine Pie Chart -->
     <h3>Percentage of Crack Cocaine Incarcerations by Race</h3>
-    <!-- This canvas element is where the pie chart will be rendered -->
     <canvas id="crackCocaineChart" width="400" height="400"></canvas>
-    <!-- END of Canvas Element for Crack Cocaine Pie Chart -->
 
     <!-- START of Canvas Element for Incarceration Bar Chart -->
     <h3>Incarceration Counts by Race and Drug Type</h3>
-    <!-- This canvas element is where the bar chart will be rendered -->
     <canvas id="incarcerationChart" width="600" height="400"></canvas>
-    <!-- END of Canvas Element for Incarceration Bar Chart -->
   </section>
 
   <section id="methodology">
     <h2>Methodology</h2>
-    <p>This project examines racial differences in sentencing and arrest rates for crack and powder cocaine offenses. The dataset, <strong>Racial Sentencing Analysis</strong>, was developed based on patterns and findings from the Government Accountability Office (GAO) related to these offenses. It includes data on average sentence lengths (in months), arrest rates per 100,000 people, conviction rates, and jurisdictional differences between federal and state levels. Additional information from GAO reports provided context on broader trends in sentencing.</p>
-    
-    <h3>Data Sources</h3>
-    <p>The <strong>Racial Sentencing Analysis</strong> dataset includes details related to racial categories, drug type, average sentencing length, and arrest rates. GAO reports offered insights into national patterns in enforcement and sentencing practices, which shaped the dataset.</p>
-    
-    <h3>Data Processing</h3>
-    <p>Data was prepared by standardizing sentence lengths to months. Entries were filtered to focus on relevant racial categories and highlight data specific to crack and powder cocaine. The dataset was checked for missing or inconsistent values to ensure accuracy and reliability.</p>
-    
-    <h3>Analysis and Visualization</h3>
-    <p>Two main charts were created. The <strong>Bar Chart</strong> compares average sentence lengths by race for crack and powder cocaine offenses, highlighting differences in sentencing across racial groups. The <strong>Pie Chart</strong> shows the distribution of arrest rates per 100,000 people by race, focusing on crack cocaine offenses. Color coding and tooltips were used to help users explore the data and gain insights.</p>
-    
-    <h3>Limitations</h3>
-    <p>This analysis has some limitations. The dataset was developed based on patterns observed in GAO data rather than direct figures from GAO. The data focuses on federal and state-level information, which may not reflect local enforcement practices. Differences in data collection processes between this dataset and GAO’s data are noted.</p>
+    <!-- Methodology content goes here -->
   </section>
 
   <section id="about">
     <h2>About</h2>
-    <p>This project examines racial differences in sentencing and arrest rates for crack and powder cocaine offenses in the United States. It looks at patterns in average sentence lengths, arrest rates, and conviction rates across racial groups to understand disparities in the criminal justice system.
+    <p>This project examines racial differences in sentencing and arrest rates for crack and powder cocaine offenses...</p>
+  </section>
 
-The dataset, Racial Sentencing Analysis, is based on findings from reports by the Government Accountability Office (GAO). It includes federal and state-level data, covering trends in sentencing and arrests. The project uses interactive charts to present the data in an accessible way.
+  <!-- Likelihood Prediction Section -->
+  <section id="likelihood">
+    <h2>Predict Likelihood of Sentencing Outcome</h2>
+    <form id="likelihoodForm">
+      <label for="drugType">Drug Type:</label>
+      <select id="drugType">
+        <option value="Crack">Crack</option>
+        <option value="Powder Cocaine">Powder Cocaine</option>
+      </select>
+      
+      <label for="race">Race:</label>
+      <select id="race">
+        <option value="White">White</option>
+        <option value="Black">Black</option>
+        <option value="Hispanic">Hispanic</option>
+        <!-- Add other races as necessary -->
+      </select>
 
-The goal of this project is to provide a clear view of racial disparities in drug sentencing. By making this information available, it aims to support discussions on justice, policy, and equality.</p>
+      <button type="button" onclick="predictLikelihood()">Predict Likelihood</button>
+    </form>
+
+    <p>Likelihood of Sentence Length > 36 months: <span id="likelihoodOutput"></span>%</p>
   </section>
 
   <footer>
     <p>Created by Jack Crone | 2024</p>
   </footer>
   
-  <!-- Link to your custom JavaScript file where the chart code is located -->
+  <!-- Link to your custom JavaScript file where the chart code and prediction function are located -->
   <script src="scripts.js"></script>
 </body>
 </html>
