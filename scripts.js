@@ -71,6 +71,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
-
-// Likelihood Prediction Model Code
-const intercept =
