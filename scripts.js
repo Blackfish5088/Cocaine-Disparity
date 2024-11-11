@@ -1,15 +1,11 @@
-// scripts.js
-
 document.addEventListener('DOMContentLoaded', function() {
   // Load the CSV data for the bar chart
   Papa.parse('data/DF.csv', {
     download: true,
     header: true,
     complete: function(results) {
-      // Process the CSV data
       const data = results.data;
 
-      // Data structure for bar chart
       const races = [];
       const crackCounts = [];
       const powderCounts = [];
@@ -20,32 +16,36 @@ document.addEventListener('DOMContentLoaded', function() {
         powderCounts.push(parseInt(row.Powder_Cocaine_Incarcerated, 10));
       });
 
-      // Create the Chart.js bar chart
-      const ctx1 = document.getElementById('incarcerationChart').getContext('2d');
-      new Chart(ctx1, {
-        type: 'bar',
-        data: {
-          labels: races,
-          datasets: [
-            {
-              label: 'Crack Cocaine',
-              data: crackCounts,
-              backgroundColor: 'rgba(255, 99, 132, 0.5)'
-            },
-            {
-              label: 'Powder Cocaine',
-              data: powderCounts,
-              backgroundColor: 'rgba(54, 162, 235, 0.5)'
+      // Check if the bar chart canvas exists
+      const ctx1 = document.getElementById('incarcerationChart');
+      if (ctx1) {
+        new Chart(ctx1.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: races,
+            datasets: [
+              {
+                label: 'Crack Cocaine',
+                data: crackCounts,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)'
+              },
+              {
+                label: 'Powder Cocaine',
+                data: powderCounts,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true }
             }
-          ]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: { beginAtZero: true }
           }
-        }
-      });
+        });
+      } else {
+        console.error("Canvas element with id 'incarcerationChart' not found.");
+      }
     }
   });
 
@@ -54,22 +54,18 @@ document.addEventListener('DOMContentLoaded', function() {
     download: true,
     header: true,
     complete: function(results) {
-      // Process the CSV data
       const data = results.data;
 
-      // Data structure for pie chart
       const raceLabels = [];
       const crackCounts = [];
 
-      // Loop through the data to get crack cocaine incarcerations by race
       data.forEach(row => {
         if (row.Offense_Type === 'Crack Cocaine') {
           raceLabels.push(row.Race);
-          crackCounts.push(parseInt(row.Incarcerated, 10)); // Convert to integer
+          crackCounts.push(parseInt(row.Incarcerated, 10));
         }
       });
 
-      // Create the pie chart with the extracted data
       const crackData = {
         labels: raceLabels,
         datasets: [
@@ -94,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
       };
 
-      // Configurations for the pie chart
       const config = {
         type: 'pie',
         data: crackData,
@@ -119,9 +114,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       };
 
-      // Render the pie chart
-      const ctx2 = document.getElementById('crackCocaineChart').getContext('2d');
-      new Chart(ctx2, config);
+      // Check if the pie chart canvas exists
+      const ctx2 = document.getElementById('crackCocaineChart');
+      if (ctx2) {
+        new Chart(ctx2.getContext('2d'), config);
+      } else {
+        console.error("Canvas element with id 'crackCocaineChart' not found.");
+      }
     }
   });
 });
