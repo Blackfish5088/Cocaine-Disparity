@@ -1,8 +1,53 @@
-// Define the predictLikelihood function globally on the window object
-window.predictLikelihood = function() {
+// Ensure scripts run after DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Load the CSV data using PapaParse
+  Papa.parse('DF.csv', {
+    download: true,
+    header: true,
+    dynamicTyping: true, // Converts numeric strings to numbers
+    complete: function(results) {
+      window.globalData = results.data;
+      // Create visualizations after data is loaded
+      createVisualizations(window.globalData);
+    }
+  });
+});
+
+// Function to create visualizations using Plotly.js
+function createVisualizations(data) {
+  // Aggregate data by race
+  const raceCounts = {};
+
+  data.forEach(row => {
+    const race = row['Race'];
+    if (race) {
+      raceCounts[race] = (raceCounts[race] || 0) + 1;
+    }
+  });
+
+  const races = Object.keys(raceCounts);
+  const counts = Object.values(raceCounts);
+
+  const trace = {
+    x: races,
+    y: counts,
+    type: 'bar',
+    marker: { color: 'rgb(142,124,195)' }
+  };
+
+  const layout = {
+    title: 'Number of Sentences by Race',
+    xaxis: { title: 'Race' },
+    yaxis: { title: 'Number of Sentences' }
+  };
+
+  Plotly.newPlot('race-sentences-chart', [trace], layout);
+}
+
+// Function to predict likelihood based on user input
+function predictLikelihood() {
   console.log("predictLikelihood function triggered");
 
-  // Get selected values for Drug Type and Race
   const drugTypeElement = document.getElementById('drugType');
   const raceElement = document.getElementById('race');
   const likelihoodOutput = document.getElementById('likelihoodOutput');
@@ -18,25 +63,34 @@ window.predictLikelihood = function() {
   console.log("Selected Drug Type:", drugType);
   console.log("Selected Race:", race);
 
-  // Dummy intercept and coefficients for example
-  const intercept = -1.23;
-  const coefficients = [0.56, -0.34, 0.78];
+  const data = window.globalData;
 
-  // Encode inputs based on model structure
-  const featureArray = [
-    drugType === 'Powder Cocaine' ? 1 : 0,
-    race === 'Black' ? 1 : 0,
-    race === 'Hispanic' ? 1 : 0
-  ];
-
-  let linearCombination = intercept;
-  for (let i = 0; i < featureArray.length; i++) {
-    linearCombination += coefficients[i] * featureArray[i];
+  if (!data) {
+    likelihoodOutput.textContent = 'Data not loaded yet. Please try again in a moment.';
+    return;
   }
 
-  const probability = 1 / (1 + Math.exp(-linearCombination));
-  const likelihoodPercentage = (probability * 100).toFixed(2);
-  likelihoodOutput.textContent = `${likelihoodPercentage}%`;
+  // Filter data based on selected drug type and race
+  const filteredData = data.filter(row => {
+    return row['DrugType'] === drugType && row['Race'] === race;
+  });
+
+  const totalCases = filteredData.length;
+
+  if (totalCases === 0) {
+    likelihoodOutput.textContent = 'No data available for the selected criteria.';
+    return;
+  }
+
+  // Calculate the number of sentences over 36 months
+  const longSentences = filteredData.filter(row => {
+    return parseFloat(row['SentenceLength']) > 36;
+  }).length;
+
+  // Calculate the likelihood percentage
+  const likelihood = ((longSentences / totalCases) * 100).toFixed(2);
+
+  likelihoodOutput.textContent = `${likelihood}%`;
 
   console.log("Likelihood Output:", likelihoodOutput.textContent);
-};
+}
