@@ -12,7 +12,7 @@
   <!-- Chart.js library for interactive charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
-  <!-- Load custom JavaScript file after HTML elements are loaded -->
+  <!-- Load custom JavaScript file -->
   <script src="scripts.js" defer></script>
 </head>
 <body>
@@ -37,17 +37,13 @@
 
   <section id="data-analysis">
     <h2>Data Analysis</h2>
-
-    <!-- START of Canvas Element for Crack Cocaine Pie Chart -->
     <h3>Percentage of Crack Cocaine Incarcerations by Race</h3>
     <canvas id="crackCocaineChart" width="400" height="400"></canvas>
-    <!-- END of Canvas Element for Crack Cocaine Pie Chart -->
-
   </section>
 
   <section id="methodology">
     <h2>Methodology</h2>
-    <!-- Methodology content goes here -->
+    <p>This section provides details on the methodology used for analyzing racial disparities in sentencing...</p>
   </section>
 
   <section id="about">
@@ -70,7 +66,6 @@
         <option value="White">White</option>
         <option value="Black">Black</option>
         <option value="Hispanic">Hispanic</option>
-        <!-- Add other races as necessary -->
       </select>
 
       <button type="button" onclick="predictLikelihood()">Predict Likelihood</button>
