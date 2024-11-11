@@ -133,8 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
 const intercept = -1.23;  // Replace with your model's intercept
 const coefficients = [0.56, -0.34, 0.78];  // Replace with your model's coefficients
 
-// Define predictLikelihood as a standalone function so it's globally accessible
-function predictLikelihood() {
+// Attach predictLikelihood to the window object to make it globally accessible
+window.predictLikelihood = function() {
   console.log("predictLikelihood function triggered");
 
   const drugType = document.getElementById('drugType').value;
@@ -167,4 +167,4 @@ function predictLikelihood() {
   // Convert to percentage and display the result
   const likelihoodPercentage = (probability * 100).toFixed(2);
   document.getElementById('likelihoodOutput').textContent = likelihoodPercentage;
-}
+};
