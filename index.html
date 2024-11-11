@@ -2,21 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Racial Disparities in Sentencing</title>
   <link rel="stylesheet" href="styles.css">
 
   <!-- Include Plotly.js for interactive charts -->
-  <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
   <!-- Include PapaParse for reading CSV data -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
   <!-- Load custom JavaScript file -->
-  <script src="scripts.js" defer></script>
+  <script src="scripts.js"></script>
 </head>
 <body>
   <header>
-    <h1>Racial Disparities in Crack vs. Powder Cocaine Sentencing</h1>
+    <h1>Racial Disparities in Crack vs. Cocaine Sentencing</h1>
   </header>
 
   <nav>
@@ -36,8 +37,7 @@
 
   <section id="data-analysis">
     <h2>Data Analysis</h2>
-    <div id="average-sentence-chart"></div>
-    <div id="arrest-rate-chart"></div>
+    <div id="race-sentences-chart"></div>
   </section>
 
   <section id="methodology">
@@ -52,13 +52,8 @@
 
   <!-- Likelihood Prediction Section -->
   <section id="likelihood">
-    <h2>Predict Likelihood of Receiving an Above-Average Sentence Length</h2>
+    <h2>Predict Likelihood of Sentence Length &gt; 36 Months</h2>
     <form id="likelihoodForm">
-      <label for="year">Year:</label>
-      <select id="year">
-        <!-- Options will be populated dynamically -->
-      </select>
-
       <label for="drugType">Drug Type:</label>
       <select id="drugType">
         <option value="Crack">Crack</option>
@@ -67,15 +62,15 @@
 
       <label for="race">Race:</label>
       <select id="race">
-        <option value="Black">Black</option>
         <option value="White">White</option>
+        <option value="Black">Black</option>
         <option value="Hispanic">Hispanic</option>
       </select>
 
       <button type="button" onclick="predictLikelihood()">Predict Likelihood</button>
     </form>
 
-    <p>Likelihood of Receiving Above Average Sentence Length: <span id="likelihoodOutput"></span></p>
+    <p>Likelihood of Sentence Length &gt; 36 months: <span id="likelihoodOutput"></span></p>
   </section>
 
   <footer>
