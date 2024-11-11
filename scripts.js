@@ -6,9 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
     header: true,
     dynamicTyping: true, // Converts numeric strings to numbers
     complete: function(results) {
+      console.log("Data loaded:", results.data);
       window.globalData = results.data;
       // Create visualizations after data is loaded
       createVisualizations(window.globalData);
+    },
+    error: function(err) {
+      console.error("Error loading CSV data:", err);
     }
   });
 });
@@ -27,6 +31,10 @@ function createVisualizations(data) {
 
   const races = Object.keys(raceCounts);
   const counts = Object.values(raceCounts);
+
+  // Console logs for debugging
+  console.log("Races:", races);
+  console.log("Counts:", counts);
 
   // Create bar chart
   createBarChart(races, counts);
@@ -61,7 +69,6 @@ function createPieChart(races, counts) {
     type: 'pie',
     textinfo: 'label+percent',
     insidetextorientation: 'radial',
-    hole: 0, // Set to 0.4 for a donut chart
     marker: {
       line: {
         color: 'white',
@@ -83,18 +90,18 @@ function createPieChart(races, counts) {
   // Add hover events to expand slices
   pieDiv.on('plotly_hover', function(data) {
     const pts = data.points[0];
-    const update = {'pull': 0.1}; // Expand the slice
+    const update = { 'pull': 0.1 }; // Expand the slice
     Plotly.restyle(pieDiv, update, [pts.pointNumber]);
   });
 
   pieDiv.on('plotly_unhover', function(data) {
     const pts = data.points[0];
-    const update = {'pull': 0}; // Reset the slice
+    const update = { 'pull': 0 }; // Reset the slice
     Plotly.restyle(pieDiv, update, [pts.pointNumber]);
   });
 }
 
-// Function to predict likelihood based on user input (remains unchanged)
+// Function to predict likelihood based on user input
 function predictLikelihood() {
   console.log("predictLikelihood function triggered");
 
