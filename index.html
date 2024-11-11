@@ -6,11 +6,14 @@
   <title>Racial Disparities in Sentencing</title>
   <link rel="stylesheet" href="styles.css">
 
+  <!-- Include Plotly.js for interactive charts -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
   <!-- Include PapaParse for reading CSV data -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
   <!-- Load custom JavaScript file -->
-  <script src="scripts.js" defer></script>
+  <script src="scripts.js"></script>
 </head>
 <body>
   <header>
@@ -34,7 +37,7 @@
 
   <section id="data-analysis">
     <h2>Data Analysis</h2>
-    <p>This section previously contained the pie chart, but we can use it for other data insights or visualizations as needed.</p>
+    <div id="race-sentences-chart"></div>
   </section>
 
   <section id="methodology">
@@ -49,7 +52,7 @@
 
   <!-- Likelihood Prediction Section -->
   <section id="likelihood">
-    <h2>Predict Likelihood of Sentencing Outcome</h2>
+    <h2>Predict Likelihood of Sentence Length &gt; 36 Months</h2>
     <form id="likelihoodForm">
       <label for="drugType">Drug Type:</label>
       <select id="drugType">
@@ -67,7 +70,7 @@
       <button type="button" onclick="predictLikelihood()">Predict Likelihood</button>
     </form>
 
-    <p>Likelihood of Sentence Length > 36 months: <span id="likelihoodOutput"></span></p>
+    <p>Likelihood of Sentence Length &gt; 36 months: <span id="likelihoodOutput"></span></p>
   </section>
 
   <footer>
