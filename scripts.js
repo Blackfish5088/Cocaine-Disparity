@@ -16,14 +16,16 @@ document.addEventListener('DOMContentLoaded', function() {
           races.push(row.Race);
         }
         if (row.Drug_Type === 'Crack') {
-          crackSentences.push(parseFloat(row.Average_Sentence_Length_Months));
+          const sentence = parseFloat(row.Average_Sentence_Length_Months);
+          if (!isNaN(sentence)) crackSentences.push(sentence);
         } else if (row.Drug_Type === 'Powder Cocaine') {
-          powderSentences.push(parseFloat(row.Average_Sentence_Length_Months));
+          const sentence = parseFloat(row.Average_Sentence_Length_Months);
+          if (!isNaN(sentence)) powderSentences.push(sentence);
         }
       });
 
       const ctx1 = document.getElementById('incarcerationChart');
-      if (ctx1) {
+      if (ctx1 && crackSentences.length && powderSentences.length) {
         new Chart(ctx1.getContext('2d'), {
           type: 'bar',
           data: {
@@ -49,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         });
       } else {
-        console.error("Canvas element with id 'incarcerationChart' not found.");
+        console.error("Canvas element with id 'incarcerationChart' not found or data is missing.");
       }
     }
   });
@@ -68,12 +70,13 @@ document.addEventListener('DOMContentLoaded', function() {
       data.forEach(row => {
         if (row.Drug_Type === 'Crack' && !raceLabels.includes(row.Race)) {
           raceLabels.push(row.Race);
-          arrestRates.push(parseFloat(row.Arrest_Rate_per_100000));
+          const arrestRate = parseFloat(row.Arrest_Rate_per_100000);
+          if (!isNaN(arrestRate)) arrestRates.push(arrestRate);
         }
       });
 
       const ctx2 = document.getElementById('crackCocaineChart');
-      if (ctx2) {
+      if (ctx2 && arrestRates.length) {
         new Chart(ctx2.getContext('2d'), {
           type: 'pie',
           data: {
@@ -120,8 +123,25 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         });
       } else {
-        console.error("Canvas element with id 'crackCocaineChart' not found.");
+        console.error("Canvas element with id 'crackCocaineChart' not found or data is missing.");
       }
     }
   });
-});
+
+  // Likelihood Prediction Model Code
+  const intercept = -1.23;  // Replace with your model's intercept
+  const coefficients = [0.56, -0.34, 0.78];  // Replace with your model's coefficients
+
+  function predictLikelihood() {
+    const drugType = document.getElementById('drugType').value;
+    const race = document.getElementById('race').value;
+
+    const featureArray = [
+      drugType === 'Powder Cocaine' ? 1 : 0,
+      race === 'Black' ? 1 : 0,
+      race === 'Hispanic' ? 1 : 0
+    ];
+
+    let linearCombination = intercept;
+    for (let i = 0; i < featureArray.length; i++) {
+      linearCombination += coefficients[i] * featureArray[i
