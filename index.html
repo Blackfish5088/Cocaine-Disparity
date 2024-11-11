@@ -11,9 +11,6 @@
   <!-- Include PapaParse for reading CSV data -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 
-  <!-- Include TensorFlow.js for machine learning -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0/dist/tf.min.js"></script>
-
   <!-- Load custom JavaScript file -->
   <script src="scripts.js" defer></script>
 </head>
@@ -57,6 +54,11 @@
   <section id="likelihood">
     <h2>Predict Likelihood of Receiving an Above-Average Sentence Length</h2>
     <form id="likelihoodForm">
+      <label for="year">Year:</label>
+      <select id="year">
+        <!-- Options will be populated dynamically -->
+      </select>
+
       <label for="drugType">Drug Type:</label>
       <select id="drugType">
         <option value="Crack">Crack</option>
