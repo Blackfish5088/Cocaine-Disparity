@@ -43,7 +43,7 @@
 
   <!-- Likelihood Prediction Section -->
   <section id="likelihood">
-    <h2>Predict Likelihood of Sentence Length &gt; 36 Months</h2>
+    <h2>Predict Likelihood of Sentence Length &lt; 36 Months</h2>
     <form id="likelihoodForm">
       <label for="drugType">Drug Type:</label>
       <select id="drugType">
@@ -58,10 +58,15 @@
         <option value="Hispanic">Hispanic</option>
       </select>
 
+      <label for="year">Year:</label>
+      <select id="year">
+        <!-- Options will be populated dynamically based on the data -->
+      </select>
+
       <button type="button" onclick="predictLikelihood()">Predict Likelihood</button>
     </form>
 
-    <p>Likelihood of Sentence Length &gt; 36 months: <span id="likelihoodOutput"></span></p>
+    <p>Likelihood of Sentence Length &lt; 36 months: <span id="likelihoodOutput"></span></p>
   </section>
 
   <footer>
