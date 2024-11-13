@@ -1,1 +1,35 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentencing Prediction</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Sentencing Prediction Tool</h1>
+    <form id="predictForm">
+        <label for="race">Race:</label>
+        <select id="race" required>
+            <option value="Black">Black</option>
+            <option value="White">White</option>
+            <option value="Hispanic">Hispanic</option>
+        </select><br>
+        
+        <label for="drug_type">Drug Type:</label>
+        <select id="drug_type" required>
+            <option value="Crack">Crack</option>
+            <option value="Powder Cocaine">Powder Cocaine</option>
+        </select><br>
+        
+        <label for="year">Year:</label>
+        <input type="number" id="year" required><br>
+        
+        <button type="button" onclick="predict()">Predict</button>
+    </form>
+    
+    <p id="result"></p>
+    
+    <script src="predict.js"></script>
+</body>
+</html>
