@@ -1,65 +1,100 @@
 /* General Styles */
 body {
+    font-family: 'Arial', sans-serif;
     margin: 0;
-    font-family: Arial, sans-serif;
-    color: #333;
+    padding: 0;
+    background-color: #f7f9fc; /* Light background for readability */
+    color: #333; /* Text color */
+    line-height: 1.6;
 }
 
-header, footer {
-    background-color: #2c3e50;
-    color: #fff;
+header {
+    background-color: #2c3e50; /* Dark blue-gray */
+    color: white;
     text-align: center;
-    padding: 1em 0;
+    padding: 1.5rem 0;
 }
 
 header h1 {
     margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
 }
 
-footer p {
-    margin: 0;
-}
-
+/* Main Content */
 main {
-    padding: 2em;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
 }
 
-/* Content Sections */
+/* Sections */
 .content {
     display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 2em;
+    flex-wrap: wrap; /* Wraps content on smaller screens */
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: white; /* White card-style background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for cards */
+    border-radius: 8px; /* Rounded corners */
 }
 
-.content .text, .content .graph {
-    flex: 1 1 45%;
-    margin: 1%;
-}
-
+/* Text Block */
 .content .text {
-    order: 1;
+    flex: 1 1 50%; /* Take up 50% width on larger screens */
+    padding: 1rem;
 }
 
+.content .text h2 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+}
+
+.content .text p {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+    line-height: 1.8;
+}
+
+/* Graph or Image Block */
 .content .graph {
-    order: 2;
+    flex: 1 1 50%; /* Take up 50% width on larger screens */
+    padding: 1rem;
+    text-align: center; /* Center images/graphs */
 }
 
-.content:nth-child(even) .text {
-    order: 2;
+.content .graph img, .content .graph canvas {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slight shadow for images */
 }
 
-.content:nth-child(even) .graph {
-    order: 1;
+/* Footer */
+footer {
+    text-align: center;
+    background-color: #2c3e50; /* Matches header */
+    color: white;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    margin-top: 2rem;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .content {
-        flex-direction: column;
+        flex-direction: column; /* Stack content vertically on small screens */
+        padding: 0.5rem;
     }
+
     .content .text, .content .graph {
-        flex: 1 1 100%;
-        margin: 0 0 1em 0;
-        order: unset;
+        flex: 1 1 100%; /* Full width for both text and graph */
+        padding: 0.5rem;
+    }
+
+    header h1 {
+        font-size: 2rem;
     }
 }
