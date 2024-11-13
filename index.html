@@ -4,33 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Cocaine Sentencing Analysis</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            max-width: 800px;
-            line-height: 1.6;
-        }
-        h1, h2 {
-            color: #333;
-        }
-        a {
-            text-decoration: none;
-            color: #007BFF;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <!-- Bootstrap CSS -->
+    <link 
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" 
+        rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktUnjErRs3FghkekuyJ7mG3DVfW3jn1yE6jh3mj25"
+        crossorigin="anonymous">
 </head>
-<body>
-    <h1>Cocaine Sentencing Analysis</h1>
-    <p>This website provides interactive visualizations based on data from the <em>DF</em> dataset. Explore the disparities in sentencing, arrest rates, and conviction rates by race and jurisdiction.</p>
-    <h2>Visualizations</h2>
-    <ul>
-        <li><a href="average_sentence_length.html" target="_blank">Average Sentence Length by Race and Drug Type</a></li>
-        <li><a href="arrest_rate_over_time.html" target="_blank">Arrest Rate Over Time by Race</a></li>
-        <li><a href="conviction_rate.html" target="_blank">Conviction Rate by Jurisdiction and Race</a></li>
-    </ul>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1 class="mb-4">Cocaine Sentencing Analysis</h1>
+            <p class="lead">
+                Explore the disparities in sentencing, arrest rates, and conviction rates based on data from the <em>DF</em> dataset.
+            </p>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h4">Visualizations</h2>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a href="average_sentence_length.html" target="_blank" class="text-decoration-none">
+                            Average Sentence Length by Race and Drug Type
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="arrest_rate_over_time.html" target="_blank" class="text-decoration-none">
+                            Arrest Rate Over Time by Race
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="conviction_rate.html" target="_blank" class="text-decoration-none">
+                            Conviction Rate by Jurisdiction and Race
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (Optional for interactive components) -->
+    <script 
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-w76AAgkp4SQf7iqO9xBgPLWo8i6PI8q6ZnxjF601k8ssD59v8y8e6JFy7PqsA6wt"
+        crossorigin="anonymous"></script>
 </body>
 </html>
