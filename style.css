@@ -62,14 +62,20 @@ main {
 /* Graph or Image Block */
 .content .graph {
     flex: 1 1 50%; /* Take up 50% width on larger screens */
+    display: flex; /* Enable flexbox for centering */
+    justify-content: center; /* Horizontally center the image */
+    align-items: center; /* Vertically center the image */
     padding: 1rem;
-    text-align: center; /* Center images/graphs */
+    text-align: center; /* Center any text if included */
 }
 
 .content .graph img, .content .graph canvas {
     max-width: 100%;
-    border-radius: 8px;
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Optional rounded corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slight shadow for images */
+    display: block; /* Remove inline spacing issues for images */
+    margin: 0 auto; /* Ensure horizontal centering */
 }
 
 /* Footer */
